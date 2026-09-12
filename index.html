@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Magic Men Hub & Ceaser Smith Merch</title>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
     <style>
         /* --- GLOBAL STYLES --- */
         :root {
@@ -65,7 +66,7 @@
 
         /* --- HERO SECTION --- */
         .hero {
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://via.placeholder.com/1200x400/111/fff?text=Magic+Men+Live+%26+Ceaser+Smith+Store');
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://via.placeholder.com/1200x400');
             background-size: cover;
             background-position: center;
             text-align: center;
@@ -108,7 +109,6 @@
             display: block;
         }
 
-        /* --- GRID LAYOUT (Shows & Merch) --- */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -117,12 +117,17 @@
 
         .card {
             background-color: var(--card-bg);
+            border: 1px solid #333;
             border-radius: 8px;
             overflow: hidden;
-            border: 1px solid #333;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            text-align: center;
+            padding-bottom: 20px;
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
         }
 
         .card img {
@@ -131,230 +136,152 @@
             object-fit: cover;
         }
 
-        .card-body {
-            padding: 20px;
-        }
-
-        .card-title {
-            font-size: 1.25rem;
-            margin: 0 0 10px 0;
+        .card h3 {
+            margin: 15px 0 5px 0;
             color: var(--gold);
         }
 
+        .card p {
+            font-size: 0.95rem;
+            color: #ccc;
+            padding: 0 15px;
+        }
+
         .price {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: bold;
-            margin-bottom: 15px;
-            color: #fff;
+            margin: 10px 0;
         }
 
         .btn {
-            display: block;
-            width: 100%;
-            padding: 10px;
             background-color: var(--gold);
             color: #000;
-            text-align: center;
             border: none;
-            border-radius: 4px;
+            padding: 10px 20px;
             font-weight: bold;
+            border-radius: 4px;
             cursor: pointer;
             transition: background 0.3s;
         }
 
         .btn:hover {
-            background-color: #c99e46;
+            background-color: #cfa143;
         }
 
-        /* --- SHOPPING CART MODAL --- */
-        .cart-modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-
-        .cart-content {
-            background: var(--card-bg);
+        /* --- FOOTER --- */
+        footer {
+            text-align: center;
             padding: 30px;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 500px;
-            border: 1px solid var(--gold);
-        }
-
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #333;
-            padding-bottom: 5px;
-        }
-
-        .close-btn {
-            background: var(--accent-red);
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            float: right;
-            cursor: pointer;
+            background-color: #000;
+            border-top: 1px solid #333;
+            margin-top: 50px;
+            font-size: 0.9rem;
+            color: #777;
         }
     </style>
 </head>
 <body>
 
-    <!-- Header Navigation -->
     <header>
         <div class="logo">MAGIC MEN × CEASER SMITH</div>
         <nav>
-            <a onclick="showTab('shows')" class="nav-link active" id="link-shows">Live Shows & Tickets</a>
-            <a onclick="showTab('merch')" class="nav-link" id="link-merch">Ceaser Smith Merch</a>
+            <a onclick="switchTab('shows')" id="nav-shows" class="active">Live Shows & Tickets</a>
+            <a onclick="switchTab('merch')" id="nav-merch">Ceaser Smith Merch</a>
         </nav>
-        <div class="cart-status" onclick="toggleCart()">Cart (<span id="cart-count">0</span>)</div>
+        <div class="cart-status" onclick="checkout()">Cart (<span id="cart-count">0</span>)</div>
     </header>
 
-    <!-- Hero Banner -->
     <div class="hero">
         <h1>THE ULTIMATE LADIES NIGHT & OFFICIAL MERCH</h1>
         <p>Book live show tickets for Australia's #1 male stage production or buy official apparel and accessories from Ceaser Smith.</p>
     </div>
 
     <div class="container">
-
-        <!-- TAB 1: MAGICMEN.COM.AU FEATURE (SHOW TICKETS) -->
+        <!-- TAB 1: MAGIC MEN SHOW TICKETS -->
         <div id="shows" class="tab-content active">
             <h2 class="section-title">Magic Men Australia - Show Tickets</h2>
             <div class="grid">
-                
                 <div class="card">
-                    <img src="https://via.placeholder.com/300x220/222/fff?text=General+Admission" alt="General Ticket">
-                    <div class="card-body">
-                        <h3 class="card-title">General Admission Ticket</h3>
-                        <p>Standard seating entry to the Magic Men live tour show.</p>
-                        <div class="price">$60.50 AUD</div>
-                        <button class="btn" onclick="addToCart('General Ticket', 60.50)">Book Ticket</button>
-                    </div>
+                    <img src="https://via.placeholder.com/400x220?text=General+Admission" alt="General Ticket">
+                    <h3>General Admission Ticket</h3>
+                    <p>Standard seating entry to the Magic Men Live tour show.</p>
+                    <div class="price">$60.50 AUD</div>
+                    <button class="btn" onclick="addToCart('General Admission Ticket', 60.50)">Book Ticket</button>
                 </div>
-
                 <div class="card">
-                    <img src="https://via.placeholder.com/300x220/222/fff?text=VIP+Meet+%26+Greet" alt="VIP Ticket">
-                    <div class="card-body">
-                        <h3 class="card-title">VIP Meet & Greet Ticket</h3>
-                        <p>Premium front-row seats plus exclusive post-show photo opportunities.</p>
-                        <div class="price">$104.50 AUD</div>
-                        <button class="btn" onclick="addToCart('VIP Ticket', 104.50)">Book Ticket</button>
-                    </div>
+                    <img src="https://via.placeholder.com/400x220?text=VIP+Meet+%26+Greet" alt="VIP Ticket">
+                    <h3>VIP Meet & Greet Ticket</h3>
+                    <p>Premium front-row seats plus exclusive post-show photo opportunities.</p>
+                    <div class="price">$104.50 AUD</div>
+                    <button class="btn" onclick="addToCart('VIP Ticket', 104.50)">Book Ticket</button>
                 </div>
-
                 <div class="card">
-                    <img src="https://via.placeholder.com/300x220/222/fff?text=Private+Stripper+Package" alt="Private Booking">
-                    <div class="card-body">
-                        <h3 class="card-title">Private Event Booking</h3>
-                        <p>Private event strip performance for birthdays and special events.</p>
-                        <div class="price">$280.00 AUD</div>
-                        <button class="btn" onclick="addToCart('Private Event Booking', 280.00)">Book Event</button>
-                    </div>
+                    <img src="https://via.placeholder.com/400x220?text=Private+Booking" alt="Private Booking">
+                    <h3>Private Event Booking</h3>
+                    <p>Private event strip performance for birthdays and special events.</p>
+                    <div class="price">$280.00 AUD</div>
+                    <button class="btn" onclick="addToCart('Private Booking', 280.00)">Book Event</button>
                 </div>
-
             </div>
         </div>
 
-        <!-- TAB 2: CEASERSMITH.SHOP FEATURE (OFFICIAL MERCHANDISE) -->
+        <!-- TAB 2: CEASER SMITH MERCHANDISE -->
         <div id="merch" class="tab-content">
-            <h2 class="section-title">Ceaser Smith - Official Collection</h2>
+            <h2 class="section-title">Ceaser Smith Official Merch</h2>
             <div class="grid">
-
                 <div class="card">
-                    <img src="https://via.placeholder.com/300x220/333/fff?text=World+Tour+T-Shirt" alt="World Tour Tee">
-                    <div class="card-body">
-                        <h3 class="card-title">2026 World Tour T-Shirt</h3>
-                        <p>Official high-quality cotton tour shirt featuring Papa C graphic graphics.</p>
-                        <div class="price">$65.00 AUD</div>
-                        <button class="btn" onclick="addToCart('2026 World Tour T-Shirt', 65.00)">Add to Cart</button>
-                    </div>
+                    <img src="https://via.placeholder.com/400x220?text=Ceaser+Smith+Tee" alt="T-Shirt">
+                    <h3>Signature Graphic Tee</h3>
+                    <p>100% heavyweight cotton custom printed Ceaser Smith streetwear tee.</p>
+                    <div class="price">$45.00 AUD</div>
+                    <button class="btn" onclick="addToCart('Signature Graphic Tee', 45.00)">Add to Cart</button>
                 </div>
-
                 <div class="card">
-                    <img src="https://via.placeholder.com/300x220/333/fff?text=Magic+Ceaser+Beach+Towel" alt="Beach Towel">
-                    <div class="card-body">
-                        <h3 class="card-title">Magic Ceaser Beach Towel</h3>
-                        <p>Large collector's print microfiber beach towel.</p>
-                        <div class="price">$75.00 AUD</div>
-                        <button class="btn" onclick="addToCart('Magic Ceaser Beach Towel', 75.00)">Add to Cart</button>
-                    </div>
+                    <img src="https://via.placeholder.com/400x220?text=Official+Hoodie" alt="Hoodie">
+                    <h3>Limited Edition Hoodie</h3>
+                    <p>Premium fleece hoodie featuring embroidered Ceaser Smith logo details.</p>
+                    <div class="price">$85.00 AUD</div>
+                    <button class="btn" onclick="addToCart('Limited Edition Hoodie', 85.00)">Add to Cart</button>
                 </div>
-
                 <div class="card">
-                    <img src="https://via.placeholder.com/300x220/333/fff?text=Ceaser+Smith+Fan+Card" alt="Fan Card">
-                    <div class="card-body">
-                        <h3 class="card-title">Ceaser Smith VIP Fan Card</h3>
-                        <p>Limited edition numbered collector card with custom stats layout.</p>
-                        <div class="price">$50.00 AUD</div>
-                        <button class="btn" onclick="addToCart('Ceaser Smith VIP Fan Card', 50.00)">Add to Cart</button>
-                    </div>
+                    <img src="https://via.placeholder.com/400x220?text=Snapback+Cap" alt="Cap">
+                    <h3>Ceaser Smith Snapback</h3>
+                    <p>Adjustable streetwear cap with structured front panels.</p>
+                    <div class="price">$35.00 AUD</div>
+                    <button class="btn" onclick="addToCart('Ceaser Smith Snapback', 35.00)">Add to Cart</button>
                 </div>
-
             </div>
         </div>
-
     </div>
 
-    <!-- CART MODAL INTERFACE -->
-    <div class="cart-modal" id="cartModal">
-        <div class="cart-content">
-            <button class="close-btn" onclick="toggleCart()">X</button>
-            <h2>Your Cart Summary</h2>
-            <div id="cart-items"></div>
-            <h3>Total: $<span id="cart-total">0.00</span> AUD</h3>
-            <button class="btn" onclick="alert('Proceeding to unified checkout integration!')">Proceed to Checkout</button>
-        </div>
-    </div>
+    <footer>
+        &copy; 2026 Magic Men Australia & Ceaser Smith Shop. All Rights Reserved.
+    </footer>
 
-    <!-- JAVASCRIPT LOGIC -->
     <script>
         let cart = [];
 
-        // Tab Switching Logic
-        function showTab(tabName) {
+        function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-
-            document.getElementById(tabName).classList.add('active');
-            document.getElementById('link-' + tabName).classList.add('active');
+            document.querySelectorAll('nav a').forEach(nav => nav.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            document.getElementById('nav-' + tabId).classList.add('active');
         }
 
-        // Cart Logic
         function addToCart(itemName, price) {
             cart.push({ name: itemName, price: price });
-            updateCartUI();
-        }
-
-        function updateCartUI() {
             document.getElementById('cart-count').innerText = cart.length;
-            
-            const cartItemsContainer = document.getElementById('cart-items');
-            cartItemsContainer.innerHTML = '';
-            let total = 0;
-
-            cart.forEach((item, index) => {
-                total += item.price;
-                cartItemsContainer.innerHTML += `
-                    <div class="cart-item">
-                        <span>${item.name}</span>
-                        <span>$${item.price.toFixed(2)}</span>
-                    </div>
-                `;
-            });
-
-            document.getElementById('cart-total').innerText = total.toFixed(2);
+            alert(itemName + " added to cart!");
         }
 
-        function toggleCart() {
-            const modal = document.getElementById('cartModal');
-            modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
+        function checkout() {
+            if (cart.length === 0) {
+                alert("Your cart is empty!");
+                return;
+            }
+            let total = cart.reduce((sum, item) => sum + item.price, 0);
+            alert("Proceeding to checkout. Total: $" + total.toFixed(2) + " AUD");
         }
     </script>
 </body>
